@@ -59,7 +59,7 @@
 #ifdef USE_LISPBM
 #include "lispif.h"
 #endif
-extern struct motor_if_state_t m_motor_m1;
+extern struct motor_if_state_t m_motor_1;
 /*
  * HW resources used:
  *
@@ -139,7 +139,7 @@ static THD_FUNCTION(led_thread, arg) {
 
 			chThdSleepMilliseconds(500);
 		} else {
-			commands_printf("Current mc config max current: %f\r\n",m_motor_m1.m_conf.l_current_max);
+			commands_printf("Current mc config max current: %f\r\n",m_motor_1.m_conf.l_current_max);
 			ledpwm_set_intensity(LED_RED, 0.0);
 		}
 
