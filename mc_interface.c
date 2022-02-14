@@ -2547,7 +2547,7 @@ static void run_timer_tasks(volatile motor_if_state_t *motor) {
 		}
 	}
 #endif
-
+commands_printf("max current %f\r\n",m_motor_1.m_conf.l_current_max);
 #ifdef HW_HAS_WHEEL_SPEED_SENSOR
 	hw_update_speed_sensor();
 #endif
@@ -2559,7 +2559,6 @@ static THD_FUNCTION(timer_thread, arg) {
 	chRegSetThreadName("mcif timer");
 
 	for(;;) {
-		commands_printf("current mc configuration max current: %f\r\n",m_motor_1.m_conf.l_current_max);
 		run_timer_tasks(&m_motor_1);
 #ifdef HW_HAS_DUAL_MOTORS
 		run_timer_tasks(&m_motor_2);
