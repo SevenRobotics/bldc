@@ -139,6 +139,7 @@ static THD_FUNCTION(led_thread, arg) {
 
 			chThdSleepMilliseconds(500);
 		} else {
+			commands_printf("In led thread");
 			ledpwm_set_intensity(LED_RED, 0.0);
 		}
 
