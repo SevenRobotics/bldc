@@ -2547,7 +2547,7 @@ static void run_timer_tasks(volatile motor_if_state_t *motor) {
 		}
 	}
 #endif
-commands_printf("hello");
+//commands_printf("hello");
 #ifdef HW_HAS_WHEEL_SPEED_SENSOR
 	hw_update_speed_sensor();
 #endif
