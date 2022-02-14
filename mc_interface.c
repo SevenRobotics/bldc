@@ -2559,6 +2559,7 @@ static THD_FUNCTION(timer_thread, arg) {
 	chRegSetThreadName("mcif timer");
 
 	for(;;) {
+		commands_printf("current mc configuration max current: %f\r\n",m_motor_1.m_conf.l_current_max);
 		run_timer_tasks(&m_motor_1);
 #ifdef HW_HAS_DUAL_MOTORS
 		run_timer_tasks(&m_motor_2);
