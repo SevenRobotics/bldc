@@ -2749,7 +2749,7 @@ static THD_FUNCTION(sample_send_thread, arg) {
 			buffer_append_float32_auto(buffer, (float)m_f_sw_samples[ind_samp] * 10.0, &index);
 			buffer[index++] = m_status_samples[ind_samp];
 			buffer[index++] = m_phase_samples[ind_samp];
-
+			commands_printf("hello");
 			commands_send_packet(buffer, index);
 		}
 	}
