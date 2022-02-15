@@ -142,7 +142,7 @@ static THD_FUNCTION(led_thread, arg) {
 			chThdSleepMilliseconds(500);
 		} else {
 			
-			commands_printf("Current foc tabs: %d \r\n",mcconf->hall_table[0]);
+			//commands_printf("Current foc tabs: %d \r\n",mcconf->hall_table[0]);
 			
 			ledpwm_set_intensity(LED_RED, 0.0);
 		}
