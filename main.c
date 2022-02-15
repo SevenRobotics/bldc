@@ -273,7 +273,7 @@ int main(void) {
 	appconf->app_adc_conf.ctrl_type = ADC_CTRL_TYPE_DUTY;
 	appconf->app_adc_conf.voltage_start = 0.0;
 	appconf->app_adc_conf.voltage_center=1.65;
-	appconf->app_adc_conf.voltage_end=3.3;
+	appconf->app_adc_conf.voltage_end=3.6;
 	app_set_configuration(appconf);
 	app_uartcomm_start(UART_PORT_BUILTIN);
 	app_uartcomm_start(UART_PORT_EXTRA_HEADER);
