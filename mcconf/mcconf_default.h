@@ -28,7 +28,7 @@
 #define MCCONF_PWM_MODE					PWM_MODE_SYNCHRONOUS // Default PWM mode
 #endif
 #ifndef MCCONF_SENSOR_MODE
-#define MCCONF_SENSOR_MODE				SENSOR_MODE_SENSORLESS // Sensor mode
+#define MCCONF_SENSOR_MODE				SENSOR_MODE_SENSORED // Sensor mode
 #endif
 #ifndef MCCONF_COMM_MODE
 #define MCCONF_COMM_MODE				COMM_MODE_INTEGRATE	// The commutation mode to use
@@ -36,25 +36,25 @@
 
 // Limits
 #ifndef MCCONF_L_CURRENT_MAX
-#define MCCONF_L_CURRENT_MAX			60.0	// Current limit in Amperes (Upper)
+#define MCCONF_L_CURRENT_MAX			40.0	// Current limit in Amperes (Upper)
 #endif
 #ifndef MCCONF_L_CURRENT_MIN
-#define MCCONF_L_CURRENT_MIN			-60.0	// Current limit in Amperes (Lower)
+#define MCCONF_L_CURRENT_MIN			-40.0	// Current limit in Amperes (Lower)
 #endif
 #ifndef MCCONF_L_IN_CURRENT_MAX
-#define MCCONF_L_IN_CURRENT_MAX			99.0	// Input current limit in Amperes (Upper)
+#define MCCONF_L_IN_CURRENT_MAX			90.0	// Input current limit in Amperes (Upper)
 #endif
 #ifndef MCCONF_L_IN_CURRENT_MIN
-#define MCCONF_L_IN_CURRENT_MIN			-60.0	// Input current limit in Amperes (Lower)
+#define MCCONF_L_IN_CURRENT_MIN			-40.0	// Input current limit in Amperes (Lower)
 #endif
 #ifndef MCCONF_L_MAX_ABS_CURRENT
-#define MCCONF_L_MAX_ABS_CURRENT		130.0	// The maximum absolute current above which a fault is generated
+#define MCCONF_L_MAX_ABS_CURRENT		90.0	// The maximum absolute current above which a fault is generated
 #endif
 #ifndef MCCONF_L_MIN_VOLTAGE
 #define MCCONF_L_MIN_VOLTAGE			8.0		// Minimum input voltage
 #endif
 #ifndef MCCONF_L_MAX_VOLTAGE
-#define MCCONF_L_MAX_VOLTAGE			57.0	// Maximum input voltage
+#define MCCONF_L_MAX_VOLTAGE			35.0	// Maximum input voltage
 #endif
 #ifndef MCCONF_L_BATTERY_CUT_START
 #define MCCONF_L_BATTERY_CUT_START		10.0	// Start limiting the positive current at this voltage
@@ -63,10 +63,10 @@
 #define MCCONF_L_BATTERY_CUT_END		8.0		// Limit the positive current completely at this voltage
 #endif
 #ifndef MCCONF_L_RPM_MAX
-#define MCCONF_L_RPM_MAX				100000.0	// The motor speed limit (Upper)
+#define MCCONF_L_RPM_MAX				6000.0	// The motor speed limit (Upper)
 #endif
 #ifndef MCCONF_L_RPM_MIN
-#define MCCONF_L_RPM_MIN				-100000.0	// The motor speed limit (Lower)
+#define MCCONF_L_RPM_MIN				-6000.0	// The motor speed limit (Lower)
 #endif
 #ifndef MCCONF_L_RPM_START
 #define MCCONF_L_RPM_START				0.8		// Fraction of full speed where RPM current limiting starts
@@ -102,10 +102,10 @@
 #define MCCONF_L_LIM_TEMP_ACCEL_DEC		0.15	// Decrease temperature limits this much during acceleration
 #endif
 #ifndef MCCONF_L_WATT_MAX
-#define MCCONF_L_WATT_MAX				1500000.0	// Maximum wattage output
+#define MCCONF_L_WATT_MAX				500.0	// Maximum wattage output
 #endif
 #ifndef MCCONF_L_WATT_MIN
-#define MCCONF_L_WATT_MIN				-1500000.0	// Minimum wattage output (braking)
+#define MCCONF_L_WATT_MIN				-500.0	// Minimum wattage output (braking)
 #endif
 #ifndef MCCONF_L_CURRENT_MAX_SCALE
 #define MCCONF_L_CURRENT_MAX_SCALE		1.0	// Maximum current scale
@@ -260,7 +260,7 @@
 #define MCCONF_FOC_ENCODER_RATIO		7.0
 #endif
 #ifndef MCCONF_FOC_SENSOR_MODE
-#define MCCONF_FOC_SENSOR_MODE			FOC_SENSOR_MODE_SENSORLESS
+#define MCCONF_FOC_SENSOR_MODE			FOC_SENSOR_MODE_HALL
 #endif
 #ifndef MCCONF_FOC_PLL_KP
 #define MCCONF_FOC_PLL_KP				2000.0
@@ -519,7 +519,7 @@
 #define MCCONF_M_OUT_AUX_MODE			OUT_AUX_MODE_OFF // Auxiliary output mode
 #endif
 #ifndef MCCONF_M_MOTOR_TEMP_SENS_TYPE
-#define MCCONF_M_MOTOR_TEMP_SENS_TYPE	TEMP_SENSOR_NTC_10K_25C // Motor temperature sensor type
+#define MCCONF_M_MOTOR_TEMP_SENS_TYPE	TEMP_SENSOR_NTC_100K_25C // Motor temperature sensor type
 #endif
 #ifndef MCCONF_M_PTC_MOTOR_COEFF
 #define MCCONF_M_PTC_MOTOR_COEFF		0.61 // %/K coefficient for motor PTC sensor
@@ -530,22 +530,22 @@
 
 // Setup Info
 #ifndef MCCONF_SI_MOTOR_POLES
-#define MCCONF_SI_MOTOR_POLES			14 // Motor pole count
+#define MCCONF_SI_MOTOR_POLES			30 // Motor pole count
 #endif
 #ifndef MCCONF_SI_GEAR_RATIO
-#define MCCONF_SI_GEAR_RATIO			3 // Gear ratio
+#define MCCONF_SI_GEAR_RATIO			1 // Gear ratio
 #endif
 #ifndef MCCONF_SI_WHEEL_DIAMETER
-#define MCCONF_SI_WHEEL_DIAMETER		0.083 // Wheel Diameter
+#define MCCONF_SI_WHEEL_DIAMETER		0.172 // Wheel Diameter
 #endif
 #ifndef MCCONF_SI_BATTERY_TYPE
 #define MCCONF_SI_BATTERY_TYPE			BATTERY_TYPE_LIION_3_0__4_2 // Battery Type
 #endif
 #ifndef MCCONF_SI_BATTERY_CELLS
-#define MCCONF_SI_BATTERY_CELLS			3 // Battery Cells
+#define MCCONF_SI_BATTERY_CELLS			7 // Battery Cells
 #endif
 #ifndef MCCONF_SI_BATTERY_AH
-#define MCCONF_SI_BATTERY_AH			6.0 // Battery amp hours
+#define MCCONF_SI_BATTERY_AH			40.0 // Battery amp hours
 #endif
 #ifndef MCCONF_SI_MOTOR_NL_CURRENT
 #define MCCONF_SI_MOTOR_NL_CURRENT		1.0 // Motor no load current
@@ -553,7 +553,7 @@
 
 // BMS
 #ifndef MCCONF_BMS_TYPE
-#define MCCONF_BMS_TYPE					BMS_TYPE_VESC
+#define MCCONF_BMS_TYPE					BMS_TYPE_NONE
 #endif
 #ifndef MCCONF_BMS_T_LIMIT_START
 #define MCCONF_BMS_T_LIMIT_START		45
