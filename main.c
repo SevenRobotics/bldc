@@ -104,8 +104,10 @@ static THD_FUNCTION(led_thread, arg) {
 	(void)arg;
 
 	chRegSetThreadName("Main LED");
+	mc_configuration *mcconf = mempools_alloc_mcconf();
 
 	for(;;) {
+		*mcconf = *mc_interface_get_configuration();
 		mc_state state1 = mc_interface_get_state();
 		mc_interface_select_motor_thread(2);
 		mc_state state2 = mc_interface_get_state();
@@ -139,7 +141,8 @@ static THD_FUNCTION(led_thread, arg) {
 
 			chThdSleepMilliseconds(500);
 		} else {
-			//commands_printf("Current mc config max current: %f\r\n",m_motor_1.m_conf.l_current_max);
+			for(int i=0;i<8;i++){
+			commands_printf("Current foc tabs: %d \r\n",mcconf->hall_table[i]);}
 			ledpwm_set_intensity(LED_RED, 0.0);
 		}
 
