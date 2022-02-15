@@ -2728,8 +2728,8 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 
 		if (control_duty) {
 			// Duty cycle control
-			if (fabsf(duty_set) < (duty_abs - 0.05) ||
-					(SIGN(motor_now->m_motor_state.vq) * motor_now->m_motor_state.iq) < conf_now->lo_current_min) {
+			// if (fabsf(duty_set) < (duty_abs - 0.05) ||
+			// 		(SIGN(motor_now->m_motor_state.vq) * motor_now->m_motor_state.iq) < conf_now->lo_current_min) {
 				// Truncating the duty cycle here would be dangerous, so run a PID controller.
 
 				// Compensation for supply voltage variations
@@ -2749,17 +2749,17 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 				float output = p_term + motor_now->m_duty_i_term;
 				utils_truncate_number(&output, -1.0, 1.0);
 				iq_set_tmp = output * conf_now->lo_current_max;
-			} else {
-				// If the duty cycle is less than or equal to the set duty cycle just limit
-				// the modulation and use the maximum allowed current.
-				motor_now->m_duty_i_term = motor_now->m_motor_state.iq / conf_now->lo_current_max;
-				motor_now->m_motor_state.max_duty = duty_set;
-				if (duty_set > 0.0) {
-					iq_set_tmp = conf_now->lo_current_max;
-				} else {
-					iq_set_tmp = -conf_now->lo_current_max;
-				}
-			}
+			// // } else {
+			// 	// If the duty cycle is less than or equal to the set duty cycle just limit
+			// 	// the modulation and use the maximum allowed current.
+			// 	motor_now->m_duty_i_term = motor_now->m_motor_state.iq / conf_now->lo_current_max;
+			// 	motor_now->m_motor_state.max_duty = duty_set;
+			// 	if (duty_set > 0.0) {
+			// 		iq_set_tmp = conf_now->lo_current_max;
+			// 	} else {
+			// 		iq_set_tmp = -conf_now->lo_current_max;
+			// 	}
+			// }
 		} else if (motor_now->m_control_mode == CONTROL_MODE_CURRENT_BRAKE) {
 			// Braking
 			iq_set_tmp = -SIGN(speed_fast_now) * fabsf(iq_set_tmp);
