@@ -262,7 +262,10 @@ int main(void) {
 #if CAN_ENABLE
 	comm_can_init();
 #endif
+	bool storeSuccess=true;
+	bool sendSuccess=true;
 
+	conf_general_autodetect_apply_sensors_foc(10,storeSuccess,sendSuccess);
 	app_uartcomm_initialize();
 	app_configuration *appconf = mempools_alloc_appconf();
 	conf_general_read_app_configuration(appconf);
