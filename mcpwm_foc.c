@@ -2776,6 +2776,7 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 				// that run on high ERPM compared to the switching frequency.
 				motor_now->m_phase_now_observer += motor_now->m_pll_speed * dt * (0.5 + conf_now->foc_observer_offset);
 				utils_norm_angle_rad((float*)&motor_now->m_phase_now_observer);
+				commands_printf("observer");
 			}
 
 			switch (conf_now->foc_sensor_mode) {
