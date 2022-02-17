@@ -3068,7 +3068,7 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 
 	m_isr_motor = 0;
 	m_last_adc_isr_duration = timer_seconds_elapsed_since(t_start);
-	mcpwm_foc_print_state();
+	
 }
 
 // Private functions
