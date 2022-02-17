@@ -2768,14 +2768,14 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 		// Set motor phase
 		{
 			if (!motor_now->m_phase_override) {
-				observer_update(motor_now->m_motor_state.v_alpha, motor_now->m_motor_state.v_beta,
+			/*	observer_update(motor_now->m_motor_state.v_alpha, motor_now->m_motor_state.v_beta,
 						motor_now->m_motor_state.i_alpha, motor_now->m_motor_state.i_beta, dt,
 						&motor_now->m_observer_x1, &motor_now->m_observer_x2, &motor_now->m_phase_now_observer, motor_now);
 
 				// Compensate from the phase lag caused by the switching frequency. This is important for motors
 				// that run on high ERPM compared to the switching frequency.
 				motor_now->m_phase_now_observer += motor_now->m_pll_speed * dt * (0.5 + conf_now->foc_observer_offset);
-				utils_norm_angle_rad((float*)&motor_now->m_phase_now_observer);
+				utils_norm_angle_rad((float*)&motor_now->m_phase_now_observer);*/
 			}
 
 			switch (conf_now->foc_sensor_mode) {
