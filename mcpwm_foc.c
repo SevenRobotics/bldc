@@ -4744,7 +4744,7 @@ static float correct_hall(float angle, float dt, volatile motor_all_state_t *mot
 			angle = motor->m_phase_now_observer_override;
 		}
 	}
-	commands_printf("Angle: %f\r\n",angle);
+	//commands_printf("Angle: %f\r\n",angle);
 	return angle;
 }
 
