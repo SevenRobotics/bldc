@@ -1133,6 +1133,7 @@ void terminal_process_string(char *str) {
 		commands_printf("v_bus: %.2f\r\n",state->m_motor_state.v_bus);
 		commands_printf("svm_sector: %d\r\n",state->m_motor_state.svm_sector);
 		commands_printf("speed: %.2f\r\n",state->m_motor_state.speed_rad_s);
+		mempools_free_motorState(state);
 	}
 	// The help command
 	else if (strcmp(argv[0], "help") == 0) {

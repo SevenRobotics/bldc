@@ -85,7 +85,7 @@ void mempools_free_mcconf(mc_configuration *conf) {
 	}
 }
 
-void mempools_free_motorstate(motor_all_state_t *state) {
+void mempools_free_motorState(motor_all_state_t *state) {
 	for (int i = 0;i < MEMPOOLS_MOTORSTATE_NUM;i++) {
 		if (&m_all_states[i].state == state) {
 			m_all_states[i].is_taken = false;
