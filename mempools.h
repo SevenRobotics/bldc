@@ -21,15 +21,18 @@
 #define MEMPOOLS_H_
 
 #include "datatypes.h"
+#include "mcpwm_foc.h"
 
 // Settings
 #define MEMPOOLS_MCCONF_NUM				10
 #define MEMPOOLS_APPCONF_NUM			3
+#define MEMPOOLS_MOTORSTATE_NUM         2
 
 // Functions
 mc_configuration *mempools_alloc_mcconf(void);
 void mempools_free_mcconf(mc_configuration *conf);
-
+motor_all_state_t *mempools_alloc_motorState(void);
+void mempools_free_motorState(motor_all_state_t* state);
 app_configuration *mempools_alloc_appconf(void);
 void mempools_free_appconf(app_configuration *conf);
 

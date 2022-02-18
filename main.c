@@ -266,11 +266,12 @@ int main(void) {
 	app_uartcomm_initialize();
 	app_configuration *appconf = mempools_alloc_appconf();
 	conf_general_read_app_configuration(appconf);
+	appconf->app_adc_conf.use_filter = true;
 	appconf->app_to_use = APP_ADC_UART;
 	appconf->app_adc_conf.ctrl_type = ADC_CTRL_TYPE_DUTY;
 	appconf->app_adc_conf.voltage_start = 0.0;
 	appconf->app_adc_conf.voltage_center=1.65;
-	appconf->app_adc_conf.voltage_end=3.6;
+	appconf->app_adc_conf.voltage_end=3.3;
 	app_set_configuration(appconf);
 	app_uartcomm_start(UART_PORT_BUILTIN);
 	app_uartcomm_start(UART_PORT_EXTRA_HEADER);
@@ -322,17 +323,9 @@ int main(void) {
 #endif
 
 	m_init_done = true;
-	commands_printf("Entering loop");
-	unsigned char data[32] ={0};
-	data[0] = COMM_TERMINAL_CMD_SYNC; 
-	unsigned char* cmd = "foc_state";
-	memcpy(data+1,cmd,strlen(cmd)+1);
-	unsigned int len = strlen(cmd)+1;
-	commands_printf("string length:::::::%d\r\n",len);
-	data[len+1] = '\0';
 	for(;;) {
 		
-		commands_process_packet(data,len,0);
+		
 		chThdSleepMilliseconds(100);
 	}
 }

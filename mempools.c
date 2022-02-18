@@ -30,11 +30,19 @@ typedef struct {
 	app_configuration conf;
 } appconf_container_t;
 
+typedef struct {
+	volatile bool is_taken;
+	motor_all_state_t state;
+} motor_state_container_t;
+
 // Private variables
 static mcconf_container_t m_mc_confs[MEMPOOLS_MCCONF_NUM] = {{0}};
 static appconf_container_t m_app_confs[MEMPOOLS_APPCONF_NUM] = {{0}};
+static motor_state_container_t m_all_states[MEMPOOLS_MOTORSTATE_NUM]={{0}};
+
 static int m_mcconf_highest = 0;
 static int m_appconf_highest = 0;
+static int m_motorconf_highest = 0;
 
 mc_configuration *mempools_alloc_mcconf(void) {
 	for (int i = 0;i < MEMPOOLS_MCCONF_NUM;i++) {
@@ -52,10 +60,35 @@ mc_configuration *mempools_alloc_mcconf(void) {
 	return 0;
 }
 
+motor_all_state_t *mempools_alloc_motorState(void) {
+	for (int i = 0;i < MEMPOOLS_MOTORSTATE_NUM;i++) {
+		if (i > m_motorconf_highest) {
+			m_motorconf_highest = i;
+		}
+		if (!m_all_states[i].is_taken) {
+			m_all_states[i].is_taken = true;
+			return &m_all_states[i].state;
+		}
+	}
+
+	m_motorconf_highest++;
+
+	return 0;
+}
+
 void mempools_free_mcconf(mc_configuration *conf) {
 	for (int i = 0;i < MEMPOOLS_MCCONF_NUM;i++) {
 		if (&m_mc_confs[i].conf == conf) {
 			m_mc_confs[i].is_taken = false;
+			return;
+		}
+	}
+}
+
+void mempools_free_motorstate(motor_all_state_t *state) {
+	for (int i = 0;i < MEMPOOLS_MOTORSTATE_NUM;i++) {
+		if (&m_all_states[i].state == state) {
+			m_all_states[i].is_taken = false;
 			return;
 		}
 	}
