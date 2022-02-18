@@ -1139,9 +1139,8 @@ void terminal_process_string(char *str) {
 		commands_printf("adc_b: %.2f\r\n",state->m_currents_adc[1]*FAC_CURRENT);
 		commands_printf("adc_c: %.2f\r\n",state->m_currents_adc[2]*FAC_CURRENT);
 
-		commands_printf("duty1_next: %d\r\n",state->m_duty1_next);
-		commands_printf("duty2_next: %d\r\n",state->m_duty2_next);
-		commands_printf("duty3_next: %d\r\n",state->m_duty3_next);
+		
+		commands_printf("zv: %.3f\r\n",state->m_conf->foc_f_zv);
 
 		mempools_free_motorState(state);
 	}
