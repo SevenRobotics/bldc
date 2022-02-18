@@ -326,8 +326,8 @@ int main(void) {
 	unsigned char data[32] ={0};
 	data[0] = COMM_TERMINAL_CMD_SYNC; 
 	unsigned char* cmd = "foc_state";
-	memcpy(data+1,cmd,strlen(cmd));
-	unsigned int len = strlen(cmd);
+	memcpy(data+1,cmd,strlen(cmd)+1);
+	unsigned int len = strlen(cmd)+1;
 	commands_printf("string length:::::::%d\r\n",len);
 	data[len+1] = '\0';
 	for(;;) {
