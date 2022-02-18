@@ -141,10 +141,7 @@ static THD_FUNCTION(led_thread, arg) {
 
 			chThdSleepMilliseconds(500);
 		} else {
-			
-			//commands_printf("Current foc tabs: %d \r\n",mcconf->hall_table[0]);
-			mcpwm_foc_print_state();
-			ledpwm_set_intensity(LED_RED, 0.0);
+				ledpwm_set_intensity(LED_RED, 0.0);
 		}
 
 		chThdSleepMilliseconds(10);
@@ -326,7 +323,15 @@ int main(void) {
 
 	m_init_done = true;
 	commands_printf("Entering loop");
+	unsigned char data[32] ={0};
+	data[0] = COMM_TERMINAL_CMD_SYNC; 
+	unsigned char* cmd = "foc_state";
+	memcpy(data+1,cmd,sizeof(cmd));
+	unsigned int len = sizeof(cmd);
+	data[len+1] = '\0';
 	for(;;) {
-		chThdSleepMilliseconds(10);
+		
+		commands_process_packet(data,len,0);
+		chThdSleepMilliseconds(100);
 	}
 }
