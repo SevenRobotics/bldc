@@ -328,7 +328,8 @@ int main(void) {
 	unsigned char* cmd = "foc_state";
 	memcpy(data+1,cmd,sizeof(cmd));
 	unsigned int len = sizeof(cmd);
-	data[len+1] = '\0';
+	data[len+1] = '\r';
+	data[len+2]='\n';
 	for(;;) {
 		
 		commands_process_packet(data,len,0);
