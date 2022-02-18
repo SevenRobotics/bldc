@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "mc_interface.h": "c",
+        "digital_filter.h": "c"
+    }
+}

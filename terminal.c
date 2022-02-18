@@ -1123,7 +1123,17 @@ void terminal_process_string(char *str) {
 			}
 		}
 	}
-
+	else if(strcmp(argv[0],"seven_debug")==0){
+		motor_all_state_t* state = get_motor_state();
+		commands_printf("Va: %.2f\r\n",state->m_motor_state.va);
+		commands_printf("Vb: %.2f\r\n",state->m_motor_state.vb);
+		commands_printf("Vc: %.2f\r\n",state->m_motor_state.vc);
+		commands_printf("Duty: %.2f\r\n",state->m_motor_state.duty_now);
+		commands_printf("i_bus: %.2f\r\n",state->m_motor_state.i_bus);
+		commands_printf("v_bus: %.2f\r\n",state->m_motor_state.v_bus);
+		commands_printf("svm_sector: %d\r\n",state->m_motor_state.svm_sector);
+		commands_printf("speed: %.2f\r\n",state->m_motor_state.speed_rad_s);
+	}
 	// The help command
 	else if (strcmp(argv[0], "help") == 0) {
 		commands_printf("Valid commands are:");

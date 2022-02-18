@@ -41,158 +41,6 @@
 #include "virtual_motor.h"
 #include "digital_filter.h"
 
-// Private types
-typedef struct {
-	float va;
-	float vb;
-	float vc;
-	float v_mag_filter;
-	float mod_alpha_filter;
-	float mod_beta_filter;
-	float mod_alpha_measured;
-	float mod_beta_measured;
-	float id_target;
-	float iq_target;
-	float max_duty;
-	float duty_now;
-	float phase;
-	float phase_cos;
-	float phase_sin;
-	float i_alpha;
-	float i_beta;
-	float i_abs;
-	float i_abs_filter;
-	float i_bus;
-	float v_bus;
-	float v_alpha;
-	float v_beta;
-	float mod_d;
-	float mod_q;
-	float mod_q_filter;
-	float id;
-	float iq;
-	float id_filter;
-	float iq_filter;
-	float vd;
-	float vq;
-	float vd_int;
-	float vq_int;
-	float speed_rad_s;
-	uint32_t svm_sector;
-	bool is_using_phase_filters;
-} motor_state_t;
-
-typedef struct {
-	int sample_num;
-	float avg_current_tot;
-	float avg_voltage_tot;
-} mc_sample_t;
-
-typedef struct {
-	void(*fft_bin0_func)(float*, float*, float*);
-	void(*fft_bin1_func)(float*, float*, float*);
-	void(*fft_bin2_func)(float*, float*, float*);
-
-	int samples;
-	int table_fact;
-	float buffer[32];
-	float buffer_current[32];
-	bool ready;
-	int ind;
-	bool is_samp_n;
-	float prev_sample;
-	float angle;
-	int est_done_cnt;
-	float observer_zero_time;
-	int flip_cnt;
-} hfi_state_t;
-
-typedef struct {
-	volatile mc_configuration *m_conf;
-	mc_state m_state;
-	mc_control_mode m_control_mode;
-	motor_state_t m_motor_state;
-	float m_curr_unbalance;
-	float m_currents_adc[3];
-	bool m_phase_override;
-	float m_phase_now_override;
-	float m_duty_cycle_set;
-	float m_id_set;
-	float m_iq_set;
-	float m_i_fw_set;
-	float m_current_off_delay;
-	float m_openloop_speed;
-	float m_openloop_phase;
-	bool m_output_on;
-	float m_pos_pid_set;
-	float m_speed_pid_set_rpm;
-	float m_speed_command_rpm;
-	float m_phase_now_observer;
-	float m_phase_now_observer_override;
-	float m_observer_x1_override;
-	float m_observer_x2_override;
-	bool m_phase_observer_override;
-	float m_phase_now_encoder;
-	float m_phase_now_encoder_no_index;
-	float m_observer_x1;
-	float m_observer_x2;
-	float m_pll_phase;
-	float m_pll_speed;
-	mc_sample_t m_samples;
-	int m_tachometer;
-	int m_tachometer_abs;
-	float m_pos_pid_now;
-	float m_gamma_now;
-	bool m_using_encoder;
-	float m_speed_est_fast;
-	float m_speed_est_faster;
-	int m_duty1_next, m_duty2_next, m_duty3_next;
-	bool m_duty_next_set;
-	hfi_state_t m_hfi;
-	int m_hfi_plot_en;
-	float m_hfi_plot_sample;
-
-	// For braking
-	float m_br_speed_before;
-	float m_br_vq_before;
-	int m_br_no_duty_samples;
-
-	float m_duty_abs_filtered;
-	float m_duty_filtered;
-	bool m_was_control_duty;
-	float m_duty_i_term;
-	float m_openloop_angle;
-	float m_x1_prev;
-	float m_x2_prev;
-	float m_phase_before_speed_est;
-	int m_tacho_step_last;
-	float m_pid_div_angle_last;
-	float m_pid_div_angle_accumulator;
-	float m_min_rpm_hyst_timer;
-	float m_min_rpm_timer;
-	bool m_cc_was_hfi;
-	float m_pos_i_term;
-	float m_pos_prev_error;
-	float m_pos_dt_int;
-	float m_pos_prev_proc;
-	float m_pos_dt_int_proc;
-	float m_pos_d_filter;
-	float m_pos_d_filter_proc;
-	float m_speed_i_term;
-	float m_speed_prev_error;
-	float m_speed_d_filter;
-	int m_ang_hall_int_prev;
-	bool m_using_hall;
-	float m_ang_hall;
-	float m_ang_hall_rate_limited;
-	float m_hall_dt_diff_last;
-	float m_hall_dt_diff_now;
-
-	// Resistance observer
-	float m_r_est;
-	float m_r_est_state;
-} motor_all_state_t;
-
 // Private variables
 static volatile bool m_dccal_done = false;
 static volatile float m_last_adc_isr_duration;
@@ -202,6 +50,7 @@ static volatile motor_all_state_t m_motor_1;
 static volatile motor_all_state_t m_motor_2;
 #endif
 static volatile int m_isr_motor = 0;
+
 
 // Private functions
 void observer_update(float v_alpha, float v_beta, float i_alpha, float i_beta,
@@ -325,6 +174,11 @@ static void update_hfi_samples(foc_hfi_samples samples, volatile motor_all_state
 	}
 
 	utils_sys_unlock_cnt();
+}
+
+motor_all_state_t* get_motor_state() {
+	motor_all_state_t* state = mempools_alloc_motorState();
+	*state = m_motor_1;
 }
 
 static void timer_reinit(int f_zv) {
