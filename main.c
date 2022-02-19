@@ -312,15 +312,10 @@ int main(void) {
 #endif
 
 	m_init_done = true;
-<<<<<<< HEAD
 
-	for(;;) {
-		chThdSleepMilliseconds(10);
-=======
 	for(;;) {
 		
 		
 		chThdSleepMilliseconds(100);
->>>>>>> 4dd425e (added seven_debug process terminal string and motor_state print utils)
 	}
 }
