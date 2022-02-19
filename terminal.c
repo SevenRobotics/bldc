@@ -426,7 +426,9 @@ void terminal_process_string(char *str) {
 		mcpwm_foc_measure_res_ind(&res, &ind, &ld_lq_diff);
 		commands_printf("Resistance: %.6f ohm", (double)res);
 		commands_printf("Inductance: %.2f uH (Lq-Ld: %.2f uH)\n", (double)ind, (double)ld_lq_diff);
-
+		mcconf_old->foc_motor_r = res;
+		mcconf_old->foc_motor_l = ind;
+		mcconf_old->foc_motor_ld_lq_diff = ld_lq_diff;
 		mc_interface_set_configuration(mcconf_old);
 
 		mempools_free_mcconf(mcconf);
