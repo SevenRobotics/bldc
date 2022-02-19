@@ -1213,10 +1213,10 @@ void terminal_process_string(char *str) {
 		commands_printf("foc_encoder_cos_offset: %0.2f\r\n", mcconf->foc_encoder_cos_offset);
 		commands_printf("foc_encoder_cos_gain: %0.2f\r\n", mcconf->foc_encoder_cos_gain);
 		commands_printf("foc_encoder_sincos_filter_constant: %0.2f\r\n", mcconf->foc_encoder_sincos_filter_constant);
-		commands_printf("foc_motor_l: %0.2f\r\n", mcconf->foc_motor_l);
-		commands_printf("foc_motor_ld_lq_diff: %0.2f\r\n", mcconf->foc_motor_ld_lq_diff);
-		commands_printf("foc_motor_r: %0.2f\r\n", mcconf->foc_motor_r);
-		commands_printf("foc_motor_flux_linkage: %0.2f\r\n", mcconf->foc_motor_flux_linkage);
+		commands_printf("foc_motor_l: %0.7f\r\n", mcconf->foc_motor_l);
+		commands_printf("foc_motor_ld_lq_diff: %0.7f\r\n", mcconf->foc_motor_ld_lq_diff);
+		commands_printf("foc_motor_r: %0.7f\r\n", mcconf->foc_motor_r);
+		commands_printf("foc_motor_flux_linkage: %0.7f\r\n", mcconf->foc_motor_flux_linkage);
 		commands_printf("foc_observer_gain: %0.2f\r\n", mcconf->foc_observer_gain);
 		commands_printf("foc_observer_gain_slow: %0.2f\r\n", mcconf->foc_observer_gain_slow);
 		commands_printf("foc_observer_offset: %0.2f\r\n", mcconf->foc_observer_offset);
