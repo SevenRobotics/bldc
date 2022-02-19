@@ -2378,7 +2378,7 @@ static void run_timer_tasks(volatile motor_if_state_t *motor) {
 		motor->m_drv_fault_iterations = 0;
 	}
 
-	update_override_limits(motor, &motor->m_conf);
+	//update_override_limits(motor, &motor->m_conf);
 
 	// Update auxiliary output
 	switch (motor->m_conf.m_out_aux_mode) {
