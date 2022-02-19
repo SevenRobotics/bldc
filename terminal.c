@@ -428,7 +428,7 @@ void terminal_process_string(char *str) {
 		commands_printf("Inductance: %.2f uH (Lq-Ld: %.2f uH)\n", (double)ind, (double)ld_lq_diff);
 		mcconf_old->foc_motor_r = (double)res;
 		mcconf_old->foc_motor_l = ((double)ind)*1e-6;
-		mcconf_old->foc_motor_ld_lq_diff = ((double)ld_lq_diff)*1e-6;
+		mcconf_old->foc_motor_ld_lq_diff = ((double)ld_lq_diff)*1e-3;
 		mc_interface_set_configuration(mcconf_old);
 
 		mempools_free_mcconf(mcconf);
