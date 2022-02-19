@@ -426,9 +426,9 @@ void terminal_process_string(char *str) {
 		mcpwm_foc_measure_res_ind(&res, &ind, &ld_lq_diff);
 		commands_printf("Resistance: %.6f ohm", (double)res);
 		commands_printf("Inductance: %.2f uH (Lq-Ld: %.2f uH)\n", (double)ind, (double)ld_lq_diff);
-		mcconf_old->foc_motor_r = res;
-		mcconf_old->foc_motor_l = ind;
-		mcconf_old->foc_motor_ld_lq_diff = ld_lq_diff;
+		mcconf_old->foc_motor_r = (double)res;
+		mcconf_old->foc_motor_l = ((double)ind)*1e-6;
+		mcconf_old->foc_motor_ld_lq_diff = ((double)ld_lq_diff)*1e-6;
 		mc_interface_set_configuration(mcconf_old);
 
 		mempools_free_mcconf(mcconf);
@@ -474,6 +474,13 @@ void terminal_process_string(char *str) {
 
 				mc_interface_release_motor();
 				mc_interface_wait_for_motor_release(1.0);
+
+				vq_avg /= samples;
+				rpm_avg /= samples;
+				iq_avg /= samples;
+
+				float linkage = (vq_avg - res * iq_avg) / RPM2RADPS_f(rpm_avg);
+				mcconf_old->foc_motor_flux_linkage = linkage;
 				mc_interface_set_configuration(mcconf_old);
 
 				mempools_free_mcconf(mcconf);
@@ -482,11 +489,7 @@ void terminal_process_string(char *str) {
 				// Enable timeout
 				timeout_configure(tout, tout_c, tout_ksw);
 
-				vq_avg /= samples;
-				rpm_avg /= samples;
-				iq_avg /= samples;
-
-				float linkage = (vq_avg - res * iq_avg) / RPM2RADPS_f(rpm_avg);
+				
 
 				commands_printf("Flux linkage: %.7f\n", (double)linkage);
 			} else {
