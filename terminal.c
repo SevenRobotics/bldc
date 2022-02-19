@@ -1122,8 +1122,7 @@ void terminal_process_string(char *str) {
 				commands_printf("Invalid arguments\n");
 			}
 		}
-	}
-	else if(strcmp(argv[0],"seven_debug")==0){
+	}else if(strcmp(argv[0],"seven_debug")==0){
 		motor_all_state_t* state = get_motor_state();
 		commands_printf("Va: %.2f\r\n",state->m_motor_state.va);
 		commands_printf("Vb: %.2f\r\n",state->m_motor_state.vb);
@@ -1143,6 +1142,198 @@ void terminal_process_string(char *str) {
 		commands_printf("zv: %.3f\r\n",state->m_conf->foc_f_zv);
 
 		mempools_free_motorState(state);
+	}else if(strcmp(argv[0],"seven_mcconf") == 0){
+		//creating an mc_configuration pointer
+		mc_configuration *mcconf = mempools_alloc_mcconf();
+		//pointing this mcconf to the existing mc_configuration data structure.
+                *mcconf = *mc_interface_get_configuration();
+		//printing all the mccconf settings.
+		commands_printf("\r\n\r\n\r\nl_current_max: %0.2f\r\n", mcconf->l_current_max);
+		commands_printf("l_current_min: %0.2f\r\n", mcconf->l_current_min);
+		commands_printf("l_in_current_max: %0.2f\r\n", mcconf->l_in_current_max);
+		commands_printf("l_in_current_min: %0.2f\r\n", mcconf->l_in_current_min);
+		commands_printf("l_abs_current_max: %0.2f\r\n", mcconf->l_abs_current_max);
+		commands_printf("l_min_erpm: %0.2f\r\n", mcconf->l_min_erpm);
+		commands_printf("l_max_erpm: %0.2f\r\n", mcconf->l_max_erpm);
+		commands_printf("l_erpm_start: %0.2f\r\n", mcconf->l_erpm_start);
+		commands_printf("l_max_erpm_fbrake: %0.2f\r\n", mcconf->l_max_erpm_fbrake);
+		commands_printf("l_max_erpm_fbrake_cc: %0.2f\r\n", mcconf->l_max_erpm_fbrake_cc);
+		commands_printf("l_min_vin: %0.2f\r\n", mcconf->l_min_vin);
+		commands_printf("l_max_vin: %0.2f\r\n", mcconf->l_max_vin);
+		commands_printf("l_battery_cut_start: %0.2f\r\n", mcconf->l_battery_cut_start);
+		commands_printf("l_battery_cut_end: %0.2f\r\n", mcconf->l_battery_cut_end);
+		commands_printf("l_slow_abs_current: %0.2f\r\n", mcconf->l_slow_abs_current);
+		commands_printf("l_temp_fet_start: %0.2f\r\n", mcconf->l_temp_fet_start);
+		commands_printf("l_temp_fet_end: %0.2f\r\n", mcconf->l_temp_fet_end);
+		commands_printf("l_temp_motor_start: %0.2f\r\n", mcconf->l_temp_motor_start);
+		commands_printf("l_temp_motor_end: %0.2f\r\n", mcconf->l_temp_motor_end);
+		commands_printf("l_temp_accel_dec: %0.2f\r\n", mcconf->l_temp_accel_dec);
+		commands_printf("l_min_duty: %0.2f\r\n", mcconf->l_min_duty);
+		commands_printf("l_max_duty: %0.2f\r\n", mcconf->l_max_duty);
+		commands_printf("l_watt_max: %0.2f\r\n", mcconf->l_watt_max);
+		commands_printf("l_watt_min: %0.2f\r\n", mcconf->l_watt_min);
+		commands_printf("l_current_max_scale: %0.2f\r\n", mcconf->l_current_max_scale);
+		commands_printf("l_current_min_scale: %0.2f\r\n", mcconf->l_current_min_scale);
+		commands_printf("l_duty_start: %0.2f\r\n", mcconf->l_duty_start);
+        // Overridden limits (Computed during runtime)
+		commands_printf("\r\n\r\n\r\nlo_current_max: %0.2f\r\n", mcconf->lo_current_max);
+		commands_printf("lo_current_min: %0.2f\r\n", mcconf->lo_current_min);
+		commands_printf("lo_in_current_max: %0.2f\r\n", mcconf->lo_in_current_max);
+		commands_printf("lo_in_current_min: %0.2f\r\n", mcconf->lo_in_current_min);
+		commands_printf("lo_current_motor_max_now: %0.2f\r\n", mcconf->lo_current_motor_max_now);
+		commands_printf("lo_current_motor_min_now: %0.2f\r\n", mcconf->lo_current_motor_min_now);
+
+        // BLDC switching and drive
+		commands_printf("\r\n\r\n\r\npwm_mode: %d\r\n", mcconf->pwm_mode);
+		commands_printf("comm_mode: %d\r\n", mcconf->comm_mode);
+		commands_printf("motor_type: %d\r\n", mcconf->motor_type);
+		commands_printf("sensor_mode: %d\r\n", mcconf->sensor_mode);
+
+        // Sensorless (bldc)
+		commands_printf("\r\n\r\n\r\nsl_min_erpm: %0.2f\r\n", mcconf->sl_min_erpm);
+		commands_printf("sl_min_erpm_cycle_int_limit: %0.2f\r\n", mcconf->sl_min_erpm_cycle_int_limit);
+		commands_printf("sl_max_fullbreak_current_dir_change: %0.2f\r\n", mcconf->sl_max_fullbreak_current_dir_change);
+		commands_printf("sl_cycle_int_limit: %0.2f\r\n", mcconf->sl_cycle_int_limit);
+		commands_printf("sl_phase_advance_at_br: %0.2f\r\n", mcconf->sl_phase_advance_at_br);
+		commands_printf("sl_cycle_int_rpm_br: %0.2f\r\n", mcconf->sl_cycle_int_rpm_br);
+		commands_printf("sl_bemf_coupling_k: %0.2f\r\n", mcconf->sl_bemf_coupling_k);
+        // Hall sensor
+		commands_printf("\r\n\r\n\r\nhall_table: %d, %d, %d, %d, %d, %d, %d, %d\r\n", mcconf->hall_table[0], mcconf->hall_table[1], mcconf->hall_table[2],mcconf->hall_table[3],mcconf->hall_table[4],mcconf->hall_table[5],mcconf->hall_table[6],mcconf->hall_table[7]);
+		commands_printf("hall_sl_erpm: %0.2f\r\n", mcconf->hall_sl_erpm);
+
+        // FOC
+		commands_printf("\r\n\r\n\r\nfoc_current_kp: %0.2f\r\n", mcconf->foc_current_kp);
+		commands_printf("foc_current_ki: %0.2f\r\n", mcconf->foc_current_ki);
+		commands_printf("foc_f_zv: %0.2f\r\n", mcconf->foc_f_zv);
+		commands_printf("foc_dt_us: %0.2f\r\n", mcconf->foc_dt_us);
+		commands_printf("foc_encoder_offset: %0.2f\r\n", mcconf->foc_encoder_offset);
+		commands_printf("foc_encoder_inverted: %0.2f\r\n", mcconf->foc_encoder_inverted);
+		commands_printf("foc_encoder_ratio: %0.2f\r\n", mcconf->foc_encoder_ratio);
+		commands_printf("foc_encoder_sin_offset: %0.2f\r\n", mcconf->foc_encoder_sin_offset);
+		commands_printf("foc_encoder_sin_gain: %0.2f\r\n", mcconf->foc_encoder_sin_gain);
+		commands_printf("foc_encoder_cos_offset: %0.2f\r\n", mcconf->foc_encoder_cos_offset);
+		commands_printf("foc_encoder_cos_gain: %0.2f\r\n", mcconf->foc_encoder_cos_gain);
+		commands_printf("foc_encoder_sincos_filter_constant: %0.2f\r\n", mcconf->foc_encoder_sincos_filter_constant);
+		commands_printf("foc_motor_l: %0.2f\r\n", mcconf->foc_motor_l);
+		commands_printf("foc_motor_ld_lq_diff: %0.2f\r\n", mcconf->foc_motor_ld_lq_diff);
+		commands_printf("foc_motor_r: %0.2f\r\n", mcconf->foc_motor_r);
+		commands_printf("foc_motor_flux_linkage: %0.2f\r\n", mcconf->foc_motor_flux_linkage);
+		commands_printf("foc_observer_gain: %0.2f\r\n", mcconf->foc_observer_gain);
+		commands_printf("foc_observer_gain_slow: %0.2f\r\n", mcconf->foc_observer_gain_slow);
+		commands_printf("foc_observer_offset: %0.2f\r\n", mcconf->foc_observer_offset);
+		commands_printf("foc_pll_kp: %0.2f\r\n", mcconf->foc_pll_kp);
+		commands_printf("foc_pll_ki: %0.2f\r\n", mcconf->foc_pll_ki);
+		commands_printf("foc_duty_dowmramp_kp: %0.2f\r\n", mcconf->foc_duty_dowmramp_kp);
+	commands_printf("foc_duty_dowmramp_ki: %0.2f\r\n", mcconf->foc_duty_dowmramp_ki);
+	commands_printf("foc_openloop_rpm: %0.2f\r\n", mcconf->foc_openloop_rpm);
+	commands_printf("foc_openloop_rpm_low: %0.2f\r\n", mcconf->foc_openloop_rpm_low);
+	commands_printf("foc_d_gain_scale_start: %0.2f\r\n", mcconf->foc_d_gain_scale_start);
+	commands_printf("foc_d_gain_scale_max_mod: %0.2f\r\n", mcconf->foc_d_gain_scale_max_mod);
+	commands_printf("foc_sl_openloop_hyst: %0.2f\r\n", mcconf->foc_sl_openloop_hyst);
+	commands_printf("foc_sl_openloop_time: %0.2f\r\n", mcconf->foc_sl_openloop_time);
+	commands_printf("foc_sl_openloop_time_lock: %0.2f\r\n", mcconf->foc_sl_openloop_time_lock);
+	commands_printf("foc_sl_openloop_time_ramp: %0.2f\r\n", mcconf->foc_sl_openloop_time_ramp);
+	commands_printf("foc_sensor_mode: %0.2f\r\n", mcconf->foc_sensor_mode);
+	commands_printf("foc_hall_table: %d, %d, %d, %d, %d, %d, %d, %d\r\n", mcconf->foc_hall_table[0], mcconf->foc_hall_table[1], mcconf->foc_hall_table[2],mcconf->foc_hall_table[3],mcconf->foc_hall_table[4],mcconf->foc_hall_table[5],mcconf->foc_hall_table[6],mcconf->foc_hall_table[7]);
+	commands_printf("foc_pll_ki: %0.2f\r\n", mcconf->foc_pll_ki);
+	commands_printf("foc_hall_interp_erpm: %0.2f\r\n", mcconf->foc_hall_interp_erpm);
+	commands_printf("foc_sl_erpm: %0.2f\r\n", mcconf->foc_sl_erpm);
+	commands_printf("foc_sample_v0_v7: %d\r\n", mcconf->foc_sample_v0_v7);
+	commands_printf("foc_sample_high_current: %d\r\n", mcconf->foc_sample_high_current);
+	commands_printf("foc_sat_comp: %0.2f\r\n", mcconf->foc_sat_comp);
+	commands_printf("foc_temp_comp: %d\r\n", mcconf->foc_temp_comp);
+	commands_printf("foc_temp_comp_base_temp: %0.2f\r\n", mcconf->foc_temp_comp_base_temp);
+	commands_printf("foc_current_filter_const: %0.2f\r\n", mcconf->foc_current_filter_const);
+	commands_printf("foc_cc_decoupling: %df\r\n", mcconf->foc_cc_decoupling);
+	commands_printf("foc_observer_type: %d\r\n", mcconf->foc_observer_type);
+	commands_printf("foc_hfi_voltage_start: %0.2f\r\n", mcconf->foc_hfi_voltage_start);
+	commands_printf("foc_hfi_voltage_run: %0.2f\r\n", mcconf->foc_hfi_voltage_run);
+	commands_printf("foc_hfi_voltage_max: %0.2f\r\n", mcconf->foc_hfi_voltage_max);
+	commands_printf("foc_sl_erpm_hfi: %0.2f\r\n", mcconf->foc_sl_erpm_hfi);
+	commands_printf("foc_hfi_start_samples: %d\r\n", mcconf->foc_hfi_start_samples);
+	commands_printf("foc_hfi_obs_ovr_sec: %0.2f\r\n", mcconf->foc_hfi_obs_ovr_sec);
+	commands_printf("foc_hfi_samples: %d\r\n", mcconf->foc_hfi_samples);
+	commands_printf("foc_offsets_cal_on_boot: %d\r\n", mcconf->foc_offsets_cal_on_boot);
+	commands_printf("foc_offsets_current: %0.2f, %0.2f, %0.2f\r\n", mcconf->foc_offsets_current[0], mcconf->foc_offsets_current[1], mcconf->foc_offsets_current[2]);
+	commands_printf("foc_offsets_voltage: %0.2f, %0.2f, %0.2f\r\n", mcconf->foc_offsets_voltage[0], mcconf->foc_offsets_voltage[1], mcconf->foc_offsets_voltage[2]);
+	commands_printf("foc_offsets_voltage_undriven: %0.2f, %0.2f, %0.2f\r\n", mcconf->foc_offsets_voltage_undriven[0], mcconf->foc_offsets_voltage_undriven[1], mcconf->foc_offsets_voltage_undriven[2]);
+	commands_printf("foc_phase_filter_enable: %d\r\n", mcconf->foc_phase_filter_enable);
+	commands_printf("foc_phase_filter_max_erpm: %0.2f\r\n", mcconf->foc_phase_filter_max_erpm);
+	commands_printf("foc_mtpa_mode: %d\r\n", mcconf->foc_mtpa_mode);
+        // Field Weakening
+	commands_printf("\r\n\r\n\r\nfoc_fw_current_max: %0.2f\r\n", mcconf->foc_fw_current_max);
+	commands_printf("foc_fw_duty_start: %0.2f\r\n", mcconf->foc_fw_duty_start);
+	commands_printf("foc_fw_ramp_time: %0.2f\r\n", mcconf->foc_fw_ramp_time);
+	commands_printf("foc_fw_q_current_factor: %0.2f\r\n", mcconf->foc_fw_q_current_factor);
+
+        // GPDrive
+	commands_printf("\r\n\r\n\r\ngpd_buffer_notify_left: %0.2f\r\n", mcconf->gpd_buffer_notify_left);
+	commands_printf("gpd_buffer_interpol: %0.2f\r\n", mcconf->gpd_buffer_interpol);
+	commands_printf("gpd_current_filter_const: %0.2f\r\n", mcconf->gpd_current_filter_const);
+	commands_printf("gpd_current_kp: %0.2f\r\n", mcconf->gpd_current_kp);
+	commands_printf("gpd_current_ki: %0.2f\r\n", mcconf->gpd_current_ki);
+	commands_printf("sp_pid_loop_rate: %d\r\n", mcconf->sp_pid_loop_rate);
+
+        // Speed PID
+	commands_printf("\r\n\r\n\r\ns_pid_kp: %0.2f\r\n", mcconf->s_pid_kp);
+	commands_printf("s_pid_ki: %0.2f\r\n", mcconf->s_pid_ki);
+	commands_printf("s_pid_kd: %0.2f\r\n", mcconf->s_pid_kd);
+	commands_printf("s_pid_kd_filter: %0.2f\r\n", mcconf->s_pid_kd_filter);
+	commands_printf("s_pid_min_erpm: %0.2f\r\n", mcconf->s_pid_min_erpm);
+	commands_printf("s_pid_allow_braking: %d\r\n", mcconf->s_pid_allow_braking);
+	commands_printf("s_pid_ramp_erpms_s: %0.2f\r\n", mcconf->s_pid_ramp_erpms_s);
+
+        // Pos PID
+	commands_printf("\r\n\r\n\r\np_pid_kp: %0.2f\r\n", mcconf->p_pid_kp);
+	commands_printf("p_pid_ki: %0.2f\r\n", mcconf->p_pid_ki);
+	commands_printf("p_pid_kd: %0.2f\r\n", mcconf->p_pid_kd);
+	commands_printf("p_pid_kd_proc: %0.2f\r\n", mcconf->p_pid_kd_proc);
+	commands_printf("p_pid_kd_filter: %0.2f\r\n", mcconf->p_pid_kd_filter);
+	commands_printf("p_pid_ang_div: %0.2f\r\n", mcconf->p_pid_ang_div);
+	commands_printf("p_pid_gain_dec_angle: %0.2f\r\n", mcconf->p_pid_gain_dec_angle);
+	commands_printf("p_pid_offset: %0.2f\r\n", mcconf->p_pid_offset);
+
+        // Current controller
+	commands_printf("\r\n\r\n\r\ncc_startup_boost_duty: %0.2f\r\n", mcconf->cc_startup_boost_duty);
+	commands_printf("cc_min_current: %0.2f\r\n", mcconf->cc_min_current);
+	commands_printf("cc_gain: %0.2f\r\n", mcconf->cc_gain);
+	commands_printf("cc_ramp_step_max: %0.2f\r\n", mcconf->cc_ramp_step_max);
+
+        // Misc
+	commands_printf("\r\n\r\n\r\nm_fault_stop_time_ms: %d\r\n", mcconf->m_fault_stop_time_ms);
+	commands_printf("m_duty_ramp_step: %0.2f\r\n", mcconf->m_duty_ramp_step);
+	commands_printf("m_current_backoff_gain: %0.2f\r\n", mcconf->m_current_backoff_gain);
+	commands_printf("m_encoder_counts: %d\r\n", mcconf->m_encoder_counts);
+	commands_printf("m_sensor_port_mode: %d\r\n", mcconf->m_sensor_port_mode);
+	commands_printf("m_invert_direction: %d\r\n", mcconf->m_invert_direction);
+	commands_printf("m_drv8301_oc_mode: %d\r\n", mcconf->m_drv8301_oc_mode);
+	commands_printf("m_drv8301_oc_adj: %d\r\n", mcconf->m_drv8301_oc_adj);
+	commands_printf("m_bldc_f_sw_min: %0.2f\r\n", mcconf->m_bldc_f_sw_min);
+	commands_printf("m_bldc_f_sw_max: %0.2f\r\n", mcconf->m_bldc_f_sw_max);
+	commands_printf("m_dc_f_sw: %0.2f\r\n", mcconf->m_dc_f_sw);
+	commands_printf("m_ntc_motor_beta: %0.2f\r\n", mcconf->m_ntc_motor_beta);
+	commands_printf("m_out_aux_mode: %d\r\n", mcconf->m_out_aux_mode);
+	commands_printf("m_motor_temp_sens_type: %d\r\n", mcconf->m_motor_temp_sens_type);
+	commands_printf("m_ptc_motor_coeff: %0.2f\r\n", mcconf->m_ptc_motor_coeff);
+	commands_printf("m_hall_extra_samples: %d\r\n", mcconf->m_hall_extra_samples);
+        // Setup info
+	commands_printf("\r\n\r\n\r\nsi_motor_poles: %d\r\n", mcconf->si_motor_poles);
+	commands_printf("si_gear_ratio: %0.2f\r\n", mcconf->si_gear_ratio);
+	commands_printf("si_wheel_diameter: %0.2f\r\n", mcconf->si_wheel_diameter);
+	commands_printf("si_battery_type: %d\r\n", mcconf->si_battery_type);
+	commands_printf("si_battery_cells: %d\r\n", mcconf->si_battery_cells);
+	commands_printf("si_battery_ah: %0.2f\r\n", mcconf->si_battery_ah);
+	commands_printf("si_motor_nl_current: %0.2f\r\n", mcconf->si_motor_nl_current);
+
+        // BMS Configuration
+	commands_printf("\r\n\r\n\r\nbms: %d\r\n", mcconf->bms);
+
+        // Protect from flash corruption.
+        uint16_t crc;
+	commands_printf("\r\n\r\n\r\ncrc: %d\r\n", mcconf->crc);
+
+		//freeing memory pointed by mccconf pointer
+		mempools_free_mcconf(mcconf);
 	}
 	// The help command
 	else if (strcmp(argv[0], "help") == 0) {
