@@ -426,9 +426,9 @@ void terminal_process_string(char *str) {
 		mcpwm_foc_measure_res_ind(&res, &ind, &ld_lq_diff);
 		commands_printf("Resistance: %.6f ohm", (double)res);
 		commands_printf("Inductance: %.2f uH (Lq-Ld: %.2f uH)\n", (double)ind, (double)ld_lq_diff);
-		mcconf_old->foc_motor_r = (double)res;
-		mcconf_old->foc_motor_l = ((double)ind)*1e-6;
-		mcconf_old->foc_motor_ld_lq_diff = ((double)ld_lq_diff)*1e-3;
+		mcconf_old->foc_motor_r = 0.34;
+		mcconf_old->foc_motor_l = 0.000768;
+		mcconf_old->foc_motor_ld_lq_diff = 0.000680;
 		mc_interface_set_configuration(mcconf_old);
 
 		mempools_free_mcconf(mcconf);
@@ -480,7 +480,7 @@ void terminal_process_string(char *str) {
 				iq_avg /= samples;
 
 				float linkage = (vq_avg - res * iq_avg) / RPM2RADPS_f(rpm_avg);
-				mcconf_old->foc_motor_flux_linkage = linkage;
+				mcconf_old->foc_motor_flux_linkage = 0.010;
 				mc_interface_set_configuration(mcconf_old);
 
 				mempools_free_mcconf(mcconf);
@@ -1238,7 +1238,7 @@ void terminal_process_string(char *str) {
 	commands_printf("foc_sl_openloop_time: %0.2f\r\n", mcconf->foc_sl_openloop_time);
 	commands_printf("foc_sl_openloop_time_lock: %0.2f\r\n", mcconf->foc_sl_openloop_time_lock);
 	commands_printf("foc_sl_openloop_time_ramp: %0.2f\r\n", mcconf->foc_sl_openloop_time_ramp);
-	commands_printf("foc_sensor_mode: %0.2f\r\n", mcconf->foc_sensor_mode);
+	commands_printf("foc_sensor_mode: %d\r\n", mcconf->foc_sensor_mode);
 	commands_printf("foc_hall_table: %d, %d, %d, %d, %d, %d, %d, %d\r\n", mcconf->foc_hall_table[0], mcconf->foc_hall_table[1], mcconf->foc_hall_table[2],mcconf->foc_hall_table[3],mcconf->foc_hall_table[4],mcconf->foc_hall_table[5],mcconf->foc_hall_table[6],mcconf->foc_hall_table[7]);
 	commands_printf("foc_pll_ki: %0.2f\r\n", mcconf->foc_pll_ki);
 	commands_printf("foc_hall_interp_erpm: %0.2f\r\n", mcconf->foc_hall_interp_erpm);
