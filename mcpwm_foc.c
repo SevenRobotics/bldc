@@ -2524,8 +2524,8 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 
 		if (control_duty) {
 			// Duty cycle control
-			// if (fabsf(duty_set) < (duty_abs - 0.05) ||
-			// 		(SIGN(motor_now->m_motor_state.vq) * motor_now->m_motor_state.iq) < conf_now->lo_current_min) {
+			if (fabsf(duty_set) < (duty_abs - 0.05) ||
+					(SIGN(motor_now->m_motor_state.vq) * motor_now->m_motor_state.iq) < conf_now->lo_current_min) {
 				// Truncating the duty cycle here would be dangerous, so run a PID controller.
 
 				// Compensation for supply voltage variations
@@ -2545,17 +2545,17 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 				float output = p_term + motor_now->m_duty_i_term;
 				utils_truncate_number(&output, -1.0, 1.0);
 				iq_set_tmp = output * conf_now->lo_current_max;
-			// // } else {
-			// 	// If the duty cycle is less than or equal to the set duty cycle just limit
-			// 	// the modulation and use the maximum allowed current.
-			// 	motor_now->m_duty_i_term = motor_now->m_motor_state.iq / conf_now->lo_current_max;
-			// 	motor_now->m_motor_state.max_duty = duty_set;
-			// 	if (duty_set > 0.0) {
-			// 		iq_set_tmp = conf_now->lo_current_max;
-			// 	} else {
-			// 		iq_set_tmp = -conf_now->lo_current_max;
-			// 	}
-			// }
+			} else {
+				// If the duty cycle is less than or equal to the set duty cycle just limit
+				// the modulation and use the maximum allowed current.
+				motor_now->m_duty_i_term = motor_now->m_motor_state.iq / conf_now->lo_current_max;
+				motor_now->m_motor_state.max_duty = duty_set;
+				if (duty_set > 0.0) {
+					iq_set_tmp = conf_now->lo_current_max;
+				} else {
+					iq_set_tmp = -conf_now->lo_current_max;
+				}
+			}
 		} else if (motor_now->m_control_mode == CONTROL_MODE_CURRENT_BRAKE) {
 			// Braking
 			iq_set_tmp = -SIGN(speed_fast_now) * fabsf(iq_set_tmp);
@@ -2682,17 +2682,17 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 
 		// Apply MTPA. See: https://github.com/vedderb/bldc/pull/179
 		const float ld_lq_diff = conf_now->foc_motor_ld_lq_diff;
-		// if (conf_now->foc_mtpa_mode != MTPA_MODE_OFF && ld_lq_diff != 0.0) {
-		// 	const float lambda = conf_now->foc_motor_flux_linkage;
+		if (conf_now->foc_mtpa_mode != MTPA_MODE_OFF && ld_lq_diff != 0.0) {
+			const float lambda = conf_now->foc_motor_flux_linkage;
 
-		// 	float iq_ref = iq_set_tmp;
-		// 	if (conf_now->foc_mtpa_mode == MTPA_MODE_IQ_MEASURED) {
-		// 		iq_ref = utils_min_abs(iq_set_tmp, motor_now->m_motor_state.iq_filter);
-		// 	}
+			float iq_ref = iq_set_tmp;
+			if (conf_now->foc_mtpa_mode == MTPA_MODE_IQ_MEASURED) {
+				iq_ref = utils_min_abs(iq_set_tmp, motor_now->m_motor_state.iq_filter);
+			}
 
-		// 	id_set_tmp = (lambda - sqrtf(SQ(lambda) + 8.0 * SQ(ld_lq_diff) * SQ(iq_ref))) / (4.0 * ld_lq_diff);
-		// 	iq_set_tmp = SIGN(iq_set_tmp) * sqrtf(SQ(iq_set_tmp) - SQ(id_set_tmp));
-		// }
+			id_set_tmp = (lambda - sqrtf(SQ(lambda) + 8.0 * SQ(ld_lq_diff) * SQ(iq_ref))) / (4.0 * ld_lq_diff);
+			iq_set_tmp = SIGN(iq_set_tmp) * sqrtf(SQ(iq_set_tmp) - SQ(id_set_tmp));
+		}
 
 		const float mod_q = motor_now->m_motor_state.mod_q_filter;
 
@@ -2762,29 +2762,29 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 		// Set motor phase
 		{
 			switch (conf_now->foc_sensor_mode) {
-			case FOC_SENSOR_MODE_ENCODER:
-				motor_now->m_motor_state.phase = correct_encoder(
-						motor_now->m_phase_now_observer,
-						motor_now->m_phase_now_encoder,
-						motor_now->m_speed_est_fast,
-						conf_now->foc_sl_erpm,
-						motor_now);
-				break;
+			// case FOC_SENSOR_MODE_ENCODER:
+			// 	motor_now->m_motor_state.phase = correct_encoder(
+			// 			motor_now->m_phase_now_observer,
+			// 			motor_now->m_phase_now_encoder,
+			// 			motor_now->m_speed_est_fast,
+			// 			conf_now->foc_sl_erpm,
+			// 			motor_now);
+			// 	break;
 			case FOC_SENSOR_MODE_HALL:
 				motor_now->m_phase_now_observer = correct_hall(motor_now->m_phase_now_observer, dt, motor_now);
 				motor_now->m_motor_state.phase = motor_now->m_phase_now_observer;
 				break;
-			case FOC_SENSOR_MODE_SENSORLESS:
-				motor_now->m_motor_state.phase = motor_now->m_phase_now_observer;
-				break;
-			case FOC_SENSOR_MODE_HFI:
-			case FOC_SENSOR_MODE_HFI_START:{
-				motor_now->m_motor_state.phase = motor_now->m_phase_now_observer;
-				if (fabsf(RADPS2RPM_f(motor_now->m_pll_speed)) < (conf_now->foc_sl_erpm_hfi * 1.1)) {
-					motor_now->m_hfi.est_done_cnt = 0;
-					motor_now->m_hfi.flip_cnt = 0;
-				}
-			} break;
+			// case FOC_SENSOR_MODE_SENSORLESS:
+			// 	motor_now->m_motor_state.phase = motor_now->m_phase_now_observer;
+			// 	break;
+			// case FOC_SENSOR_MODE_HFI:
+			// case FOC_SENSOR_MODE_HFI_START:{
+			// 	motor_now->m_motor_state.phase = motor_now->m_phase_now_observer;
+			// 	if (fabsf(RADPS2RPM_f(motor_now->m_pll_speed)) < (conf_now->foc_sl_erpm_hfi * 1.1)) {
+			// 		motor_now->m_hfi.est_done_cnt = 0;
+			// 		motor_now->m_hfi.flip_cnt = 0;
+			// 	}
+			// } break;
 
 			}
 
