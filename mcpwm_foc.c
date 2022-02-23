@@ -88,7 +88,7 @@ static THD_FUNCTION(pid_thread, arg);
 static volatile bool pid_thd_stop;
 
 // Macros
-#ifdef HW_HAS_3_SHUNTS
+/*#ifdef HW_HAS_3_SHUNTS
 #define TIMER_UPDATE_DUTY_M1(duty1, duty2, duty3) \
 		TIM1->CR1 |= TIM_CR1_UDIS; \
 		TIM1->CCR1 = duty1; \
@@ -102,12 +102,12 @@ static volatile bool pid_thd_stop;
 		TIM8->CCR2 = duty2; \
 		TIM8->CCR3 = duty3; \
 		TIM8->CR1 &= ~TIM_CR1_UDIS;
-#else
+#else*/
 #define TIMER_UPDATE_DUTY_M1(duty1, duty2, duty3) \
 		TIM1->CR1 |= TIM_CR1_UDIS; \
-		TIM1->CCR1 = duty1; \
-		TIM1->CCR2 = duty3; \
-		TIM1->CCR3 = duty2; \
+		TIM1->CCR3 = duty1; \
+		TIM1->CCR1 = duty3; \
+		TIM1->CCR2 = duty2; \
 		TIM1->CR1 &= ~TIM_CR1_UDIS;
 #define TIMER_UPDATE_DUTY_M2(duty1, duty2, duty3) \
 		TIM8->CR1 |= TIM_CR1_UDIS; \
@@ -115,7 +115,7 @@ static volatile bool pid_thd_stop;
 		TIM8->CCR2 = duty3; \
 		TIM8->CCR3 = duty2; \
 		TIM8->CR1 &= ~TIM_CR1_UDIS;
-#endif
+/*#endif*/
 
 #define TIMER_UPDATE_SAMP(samp) \
 		TIM2->CCR2 = (samp / 2);
