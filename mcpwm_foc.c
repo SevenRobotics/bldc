@@ -2401,6 +2401,8 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 	float ia = ADC_curr_norm_value[0 + norm_curr_ofs] * FAC_CURRENT;
 	float ib = ADC_curr_norm_value[1 + norm_curr_ofs] * FAC_CURRENT;
 //	float ic = -(ia + ib);
+	motor_now->m_motor_state.ia = ia;//seven inserted line
+	motor_now->m_motor_state.ib = ib;//seven inserted line
 
 #ifdef HW_HAS_PHASE_SHUNTS
 	float dt;
@@ -3803,6 +3805,9 @@ static void control_current(volatile motor_all_state_t *motor, float dt) {
     // Calculate the duty cycles for all the phases. This also injects a zero modulation signal to
 	// be able to fully utilize the bus voltage. See https://microchipdeveloper.com/mct5001:start
 	svm(mod_alpha, mod_beta, top, &duty1, &duty2, &duty3, (uint32_t*)&state_m->svm_sector);
+	state_m->duty1 = duty1;//seven_inserted line
+	state_m->duty2 = duty2;//seven inserted line
+	state_m->duty3 = duty3;//seven inserted line
 
 	if (motor == &m_motor_1) {
 		TIMER_UPDATE_DUTY_M1(duty1, duty2, duty3);

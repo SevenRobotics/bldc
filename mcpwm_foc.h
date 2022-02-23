@@ -61,6 +61,11 @@ typedef struct {
 	float vq_int;
 	float speed_rad_s;
 	uint32_t svm_sector;
+	uint32_t duty1;//seven inserted line
+	uint32_t duty2;//seven inserted line
+	uint32_t duty3;//seven inserted line
+	float ia;//seven inserted line
+	float ib;//seven inserted line
 	bool is_using_phase_filters;
 } motor_state_t;
 

@@ -429,6 +429,10 @@ void terminal_process_string(char *str) {
 		mcconf_old->foc_motor_r = 0.34;
 		mcconf_old->foc_motor_l = 0.000768;
 		mcconf_old->foc_motor_ld_lq_diff = 0.000680;
+		mcconf_old->foc_motor_flux_linkage = 0.010;
+		uint8_t hall_table[8]={255,100,167,133,34,67,1,255};
+		memcpy(mcconf_old->foc_hall_table,hall_table,8);
+		mcconf_old->foc_sl_erpm = 3500;
 		mc_interface_set_configuration(mcconf_old);
 
 		mempools_free_mcconf(mcconf);
@@ -1129,22 +1133,21 @@ void terminal_process_string(char *str) {
 		}
 	}else if(strcmp(argv[0],"seven_debug")==0){
 		motor_all_state_t* state = get_motor_state();
-		commands_printf("Va: %.2f\r\n",state->m_motor_state.va);
-		commands_printf("Vb: %.2f\r\n",state->m_motor_state.vb);
-		commands_printf("Vc: %.2f\r\n",state->m_motor_state.vc);
-		commands_printf("Duty: %.2f\r\n",state->m_motor_state.duty_now);
-		commands_printf("i_bus: %.2f\r\n",state->m_motor_state.i_bus);
-		commands_printf("v_bus: %.2f\r\n",state->m_motor_state.v_bus);
-		commands_printf("svm_sector: %d\r\n",state->m_motor_state.svm_sector);
-		commands_printf("speed: %.2f\r\n",state->m_motor_state.speed_rad_s);
-		commands_printf("pll_speed: %.2f\r\n",state->m_pll_speed);
-
-		commands_printf("adc_a: %.2f\r\n",state->m_currents_adc[0]*FAC_CURRENT);
-		commands_printf("adc_b: %.2f\r\n",state->m_currents_adc[1]*FAC_CURRENT);
-		commands_printf("adc_c: %.2f\r\n",state->m_currents_adc[2]*FAC_CURRENT);
+		commands_printf("duty1:%d\r\n",state->m_motor_state.duty1);
+		commands_printf("duty2:%d\r\n",state->m_motor_state.duty2);
+		commands_printf("duty3:%d\r\n",state->m_motor_state.duty3);
+		commands_printf("Duty:%.2f\r\n",state->m_motor_state.duty_now);
+		commands_printf("i_bus:%.2f\r\n",state->m_motor_state.i_bus);
+		commands_printf("v_bus:%.2f\r\n",state->m_motor_state.v_bus);
+		commands_printf("svm_sector:%d\r\n",state->m_motor_state.svm_sector);
+		commands_printf("speed:%.2f\r\n",state->m_motor_state.speed_rad_s);
+		commands_printf("pll_speed:%.2f\r\n",state->m_pll_speed);
+		commands_printf("adc_a:%.2f\r\n",state->m_motor_state.ia);
+		commands_printf("adc_b:%.2f\r\n",state->m_motor_state.ib);
+		commands_printf("adc_c:%.2f\r\n",0.00f);
 
 		
-		commands_printf("zv: %.3f\r\n",state->m_conf->foc_f_zv);
+		commands_printf("erpm:%.3f\r\n",(double)mc_interface_get_rpm()/15.0);
 
 		mempools_free_motorState(state);
 	}else if(strcmp(argv[0],"seven_mcconf") == 0){
